@@ -10,8 +10,10 @@ const app = express()
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// changed port to 5500
-const port = 5500
+const port = process.env.PORT || 5500
+
+// Dynamic copyright year
+const currentYear = new Date().getFullYear()
 
 // Static middleware
 app.use(express.static(path.join(__dirname, "public")))
@@ -22,28 +24,33 @@ app.set("view engine", "ejs")
 // Routes
 app.get("/", (req, res) => {
   res.render("index", {
-    title: "Home"
+    title: "Home",
+    currentYear
   })
 })
 
 app.get("/organizations", (req, res) => {
   res.render("organizations", {
-    title: "Organizations"
+    title: "Organizations",
+    currentYear
   })
 })
 
 app.get("/projects", (req, res) => {
   res.render("projects", {
-    title: "Service Projects"
+    title: "Service Projects",
+    currentYear
   })
 })
 
 app.get("/categories", (req, res) => {
   res.render("categories", {
-    title: "Project Categories"
+    title: "Project Categories",
+    currentYear
   })
 })
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`)
 })
+
