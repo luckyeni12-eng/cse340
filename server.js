@@ -47,7 +47,7 @@ app.get("/projects", (req, res) => {
     });
 });
 
-// ================= CATEGORIES (UPDATED FOR WEEK 2) =================
+// ================= CATEGORIES (UPDATED FOR WEEK 2 assignment) =================
 app.get("/categories", async (req, res) => {
     const categories = await getAllCategories();
 
