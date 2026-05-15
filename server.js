@@ -1,56 +1,63 @@
-import express from "express"
-import dotenv from "dotenv"
-import path from "path"
-import { fileURLToPath } from "url"
+import express from "express";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config()
+import { getAllOrganizations } from "./src/models/organizations.js";
+import { getAllCategories } from "./src/models/categories.js";
 
-const app = express()
+dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const app = express();
 
-const port = process.env.PORT || 5500
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Dynamic copyright year
-const currentYear = new Date().getFullYear()
+const port = process.env.PORT || 5500;
 
-// Static middleware
-app.use(express.static(path.join(__dirname, "public")))
+const currentYear = new Date().getFullYear();
 
-// View engine
-app.set("view engine", "ejs")
+app.use(express.static(path.join(__dirname, "public")));
+app.set("view engine", "ejs");
 
-// Routes
+// ================= HOME =================
 app.get("/", (req, res) => {
-  res.render("index", {
-    title: "Home",
-    currentYear
-  })
-})
+    res.render("index", {
+        title: "Home",
+        currentYear
+    });
+});
 
-app.get("/organizations", (req, res) => {
-  res.render("organizations", {
-    title: "Organizations",
-    currentYear
-  })
-})
+// ================= ORGANIZATIONS =================
+app.get("/organizations", async (req, res) => {
+    const organizations = await getAllOrganizations();
 
+    res.render("organizations", {
+        title: "Organizations",
+        currentYear,
+        organizations
+    });
+});
+
+// ================= PROJECTS =================
 app.get("/projects", (req, res) => {
-  res.render("projects", {
-    title: "Service Projects",
-    currentYear
-  })
-})
+    res.render("projects", {
+        title: "Service Projects",
+        currentYear
+    });
+});
 
-app.get("/categories", (req, res) => {
-  res.render("categories", {
-    title: "Project Categories",
-    currentYear
-  })
-})
+// ================= CATEGORIES (UPDATED FOR WEEK 2) =================
+app.get("/categories", async (req, res) => {
+    const categories = await getAllCategories();
+
+    res.render("categories", {
+        title: "Project Categories",
+        currentYear,
+        categories
+    });
+});
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`)
-})
-
+    console.log(`Server running at http://localhost:${port}`);
+});
