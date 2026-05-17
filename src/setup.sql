@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS project_categories (
 );
 
 -- =========================================
--- SAMPLE DATA: ORGANIZATIONS
+-- SAMPLE DATA: ORGANIZATIONSs
 -- =========================================
 INSERT INTO organizations (name, description)
 VALUES
