@@ -20,7 +20,7 @@ const currentYear = new Date().getFullYear();
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
-// ================= HOME =================
+// ================= HOME detail=================
 app.get("/", (req, res) => {
     res.render("index", {
         title: "Home",
