@@ -1,13 +1,11 @@
-import { pool } from "../db.js";
+<%- include("partials/header") %>
 
-export async function getAllCategories() {
-  try {
-    const result = await pool.query(
-      "SELECT * FROM categories ORDER BY id ASC"
-    );
-    return result.rows;
-  } catch (err) {
-    console.error("DB Error (categories):", err.message);
-    throw err;
-  }
-}
+<h2>Service Project Categories</h2>
+
+<ul class="category-list">
+  <% categories.forEach(category => { %>
+    <li><%= category.name %></li>
+  <% }) %>
+</ul>
+
+<%- include("partials/footer") %>
