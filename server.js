@@ -1,86 +1,39 @@
 import express from "express";
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
-import { getAllOrganizations } from "./src/models/organizations.js";
 import { getAllCategories } from "./src/models/categories.js";
-import { testConnection } from "./src/models/db.js";
 
 dotenv.config();
 
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Render provides PORT dynamically
+const PORT = process.env.PORT || 10000;
 
-const port = process.env.PORT || 5500;
-
-const currentYear = new Date().getFullYear();
-
-app.use(express.static(path.join(__dirname, "public")));
-app.set("view engine", "ejs");
-
-// 🔥 ADD JSON + FORM SUPPORT (important for real apps)
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// ================= HOME =================
-app.get("/", (req, res) => {
-  res.render("index", {
-    title: "Home",
-    currentYear,
-  });
-});
-
-// ================= ORGANIZATIONS =================
-app.get("/organizations", async (req, res) => {
+// TEST ROUTE (very important for debugging)
+app.get("/db-test", async (req, res) => {
   try {
-    const organizations = await getAllOrganizations();
-
-    res.render("organizations", {
-      title: "Organizations",
-      currentYear,
-      organizations,
-    });
+    const data = await getAllCategories();
+    res.json(data);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Database error loading organizations");
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 
-// ================= PROJECTS =================
-app.get("/projects", (req, res) => {
-  res.render("projects", {
-    title: "Service Projects",
-    currentYear,
-  });
-});
-
-// ================= CATEGORIES =================
+// Example route
 app.get("/categories", async (req, res) => {
   try {
-    const categories = await getAllCategories();
-
-    res.render("categories", {
-      title: "Project Categories",
-      currentYear,
-      categories,
-    });
+    const data = await getAllCategories();
+    res.json(data);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Database error loading categories");
+    res.status(500).json({ error: "Failed to load categories" });
   }
 });
 
-// ================= START SERVER =================
-app.listen(port, async () => {
-  console.log(`Server running at http://localhost:${port}`);
-
-  // 🔥 SAFE DB TEST (won’t crash deployment)
-  try {
-    await testConnection();
-  } catch (err) {
-    console.error("Warning: DB not connected on startup");
-  }
+// IMPORTANT: listen on Render port
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
