@@ -74,7 +74,7 @@ app.get("/categories", async (req, res) => {
   }
 });
 
-// ================= START SERVER =================
+// ================= START sSERVER =================
 app.listen(port, async () => {
   console.log(`Server running at http://localhost:${port}`);
 
