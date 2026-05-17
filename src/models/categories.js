@@ -1,12 +1,12 @@
-import pool from "../models/db.js"
+import db from "./db.js";
 
 /**
- * Get all categories from the database
+ * Get all categories
  */
 export async function getAllCategories() {
-    const result = await pool.query(
-        "SELECT id, name FROM categories ORDER BY name ASC"
-    );
+  const result = await db.query(
+    "SELECT id, name FROM categories ORDER BY name ASC"
+  );
 
-    return result.rows;
+  return result.rows;
 }

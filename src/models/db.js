@@ -1,74 +1,44 @@
-import { Pool } from 'pg';
-import dotenv from 'dotenv';
+import pg from "pg";
+import dotenv from "dotenv";
 
 dotenv.config();
 
+const { Pool } = pg;
+
 /**
- * Connection pool for PostgreSQL database.
+ * Render + production-safe PostgreSQL pool
  */
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: false
+
+  // 🔥 REQUIRED for Render / cloud Postgres
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
 });
 
 /**
- * Wrapper for query logging in development mode.
+ * Safe query wrapper (optional logging)
  */
-let db = null;
+const db = {
+  query: (text, params) => pool.query(text, params),
 
-if (
-  process.env.NODE_ENV === 'development' &&
-  process.env.ENABLE_SQL_LOGGING === 'true'
-) {
-  db = {
-    async query(text, params) {
-      try {
-        const start = Date.now();
-        const res = await pool.query(text, params);
-        const duration = Date.now() - start;
-
-        console.log('Executed query:', {
-          text: text.replace(/\s+/g, ' ').trim(),
-          duration: `${duration}ms`,
-          rows: res.rowCount
-        });
-
-        return res;
-      } catch (error) {
-        console.error('Error in query:', {
-          text: text.replace(/\s+/g, ' ').trim(),
-          error: error.message
-        });
-
-        throw error;
-      }
-    },
-
-    async close() {
-      await pool.end();
-    }
-  };
-} else {
-  db = pool;
-}
+  close: () => pool.end(),
+};
 
 /**
- * Test database connection
+ * Test DB connection
  */
-const testConnection = async () => {
+export const testConnection = async () => {
   try {
-    const result = await db.query('SELECT NOW() as current_time');
-
-    console.log(
-      'Database connection successful:',
-      result.rows[0].current_time
-    );
-
+    const result = await db.query("SELECT NOW()");
+    console.log("DB connected:", result.rows[0]);
     return true;
-  } catch (error) {
-    console.error('Database connection failed:', error.message);
-    throw error;
+  } catch (err) {
+    console.error("DB connection failed:", err.message);
+    throw err;
   }
 };
 
-export { db as default, testConnection };
+export default db;

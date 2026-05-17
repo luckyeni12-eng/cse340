@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 
 import { getAllOrganizations } from "./src/models/organizations.js";
 import { getAllCategories } from "./src/models/categories.js";
+import { testConnection } from "./src/models/db.js";
 
 dotenv.config();
 
@@ -20,44 +21,66 @@ const currentYear = new Date().getFullYear();
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
-// ================= HOME detail=================
+// 🔥 ADD JSON + FORM SUPPORT (important for real apps)
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// ================= HOME =================
 app.get("/", (req, res) => {
-    res.render("index", {
-        title: "Home",
-        currentYear
-    });
+  res.render("index", {
+    title: "Home",
+    currentYear,
+  });
 });
 
 // ================= ORGANIZATIONS =================
 app.get("/organizations", async (req, res) => {
+  try {
     const organizations = await getAllOrganizations();
 
     res.render("organizations", {
-        title: "Organizations",
-        currentYear,
-        organizations
+      title: "Organizations",
+      currentYear,
+      organizations,
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database error loading organizations");
+  }
 });
 
 // ================= PROJECTS =================
 app.get("/projects", (req, res) => {
-    res.render("projects", {
-        title: "Service Projects",
-        currentYear
-    });
+  res.render("projects", {
+    title: "Service Projects",
+    currentYear,
+  });
 });
 
-// ================= CATEGORIES (UPDATED FOR WEEK 2 assignment) =================
+// ================= CATEGORIES =================
 app.get("/categories", async (req, res) => {
+  try {
     const categories = await getAllCategories();
 
     res.render("categories", {
-        title: "Project Categories",
-        currentYear,
-        categories
+      title: "Project Categories",
+      currentYear,
+      categories,
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database error loading categories");
+  }
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+// ================= START SERVER =================
+app.listen(port, async () => {
+  console.log(`Server running at http://localhost:${port}`);
+
+  // 🔥 SAFE DB TEST (won’t crash deployment)
+  try {
+    await testConnection();
+  } catch (err) {
+    console.error("Warning: DB not connected on startup");
+  }
 });
