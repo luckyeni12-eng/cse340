@@ -1,3 +1,4 @@
+import pg from "pg";
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
@@ -8,7 +9,9 @@ dotenv.config();
  */
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: false
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 /**
@@ -72,3 +75,4 @@ const testConnection = async () => {
 };
 
 export { db as default, testConnection };
+export default pool;
