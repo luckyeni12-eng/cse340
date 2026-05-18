@@ -75,4 +75,3 @@ const testConnection = async () => {
 };
 
 export { db as default, testConnection };
-export default pool;
