@@ -1,0 +1,27 @@
+<%- include("partials/header") %>
+
+<section class="project-details-page">
+
+  <h2><%= project.title %></h2>
+
+  <div class="project-details-card">
+
+    <img
+      src="<%= project.image %>"
+      alt="<%= project.title %>"
+      class="details-image"
+    >
+
+    <div class="details-info">
+
+      <p>
+        <%= project.description %>
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<%- include("partials/footer") %>

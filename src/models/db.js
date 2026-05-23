@@ -1,27 +1,29 @@
-import pg from "pg";
-import { Pool } from 'pg';
-import dotenv from 'dotenv';
+import { Pool } from "pg";
+import dotenv from "dotenv";
 
 dotenv.config();
 
 /**
- * Connection pool for PostgreSQL database.
+ * PostgreSQL connection pool
  */
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+
+  // Only use SSL in production (Render)
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
 });
 
 /**
- * Wrapper for query logging in development mode.
+ * Query wrapper with optional logging
  */
 let db = null;
 
 if (
-  process.env.NODE_ENV === 'development' &&
-  process.env.ENABLE_SQL_LOGGING === 'true'
+  process.env.NODE_ENV === "development" &&
+  process.env.ENABLE_SQL_LOGGING === "true"
 ) {
   db = {
     async query(text, params) {
@@ -30,17 +32,17 @@ if (
         const res = await pool.query(text, params);
         const duration = Date.now() - start;
 
-        console.log('Executed query:', {
-          text: text.replace(/\s+/g, ' ').trim(),
+        console.log("Executed query:", {
+          text: text.replace(/\s+/g, " ").trim(),
           duration: `${duration}ms`,
-          rows: res.rowCount
+          rows: res.rowCount,
         });
 
         return res;
       } catch (error) {
-        console.error('Error in query:', {
-          text: text.replace(/\s+/g, ' ').trim(),
-          error: error.message
+        console.error("Error in query:", {
+          text: text.replace(/\s+/g, " ").trim(),
+          error: error.message,
         });
 
         throw error;
@@ -49,7 +51,7 @@ if (
 
     async close() {
       await pool.end();
-    }
+    },
   };
 } else {
   db = pool;
@@ -60,18 +62,25 @@ if (
  */
 const testConnection = async () => {
   try {
-    const result = await db.query('SELECT NOW() as current_time');
+    const result = await db.query(
+      "SELECT NOW() AS current_time"
+    );
 
     console.log(
-      'Database connection successful:',
+      "Database connection successful:",
       result.rows[0].current_time
     );
 
     return true;
   } catch (error) {
-    console.error('Database connection failed:', error.message);
+    console.error(
+      "Database connection failed:",
+      error.message
+    );
+
     throw error;
   }
 };
 
-export { db as default, testConnection };
+export { testConnection };
+export default db;

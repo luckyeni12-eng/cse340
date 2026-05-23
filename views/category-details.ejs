@@ -1,0 +1,34 @@
+<%- include("partials/header") %>
+
+<section class="category-detail page-container">
+
+  <h2><%= category.name %></h2>
+
+  <% if (category.image) { %>
+    <img src="<%= category.image %>" alt="<%= category.name %>" class="category-image">
+  <% } %>
+
+  <% if (category.description) { %>
+    <p class="category-description">
+      <%= category.description %>
+    </p>
+  <% } %>
+
+  <h3>Service Projects</h3>
+
+  <ul class="project-list">
+    <% projects.forEach(project => { %>
+      <li>
+        <!-- FIXED ROUTE (usually should be /projects/:id not /project/:id) -->
+        <a href="/projects/<%= project.id %>">
+          <%= project.name %>
+        </a>
+
+        <p><%= project.description %></p>
+      </li>
+    <% }) %>
+  </ul>
+
+</section>
+
+<%- include("partials/footer") %>

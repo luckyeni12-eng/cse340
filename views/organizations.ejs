@@ -1,27 +1,27 @@
 <%- include("partials/header") %>
 
-<h2>Organizations</h2>
+<section class="organizations-section">
 
-<div class="card-grid">
+  <h2>Organizations</h2>
 
-  <div class="card">
-    <img src="/images/cleanup.jpg" alt="Community cleanup">
-    <h3>Green Earth Initiative</h3>
-    <p>Environmental cleanup and sustainability projects.</p>
-  </div>
+  <% if (organizations && organizations.length > 0) { %>
 
-  <div class="card">
-    <img src="/images/tutoring.jpg" alt="Tutoring students">
-    <h3>Future Scholars</h3>
-    <p>Educational support and mentoring programs.</p>
-  </div>
+    <ul class="organization-list">
 
-  <div class="card">
-    <img src="/images/wellness.jpg" alt="Health and wellness">
-    <h3>Healthy Communities</h3>
-    <p>Health outreach and wellness programs.</p>
-  </div>
+      <% organizations.forEach(org => { %>
+        <li>
+          <a href="/organizations/<%= org.id %>">
+            <%= org.name %>
+          </a>
+        </li>
+      <% }) %>
 
-</div>
+    </ul>
+
+  <% } else { %>
+    <p>No organizations found.</p>
+  <% } %>
+
+</section>
 
 <%- include("partials/footer") %>

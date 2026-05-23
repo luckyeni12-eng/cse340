@@ -1,11 +1,19 @@
 <%- include("partials/header") %>
 
-<h2>Service Project Categories</h2>
+<section class="categories-section page-container">
+  
+  <h2 class="page-title">Categories</h2>
 
-<ul class="category-list">
-  <% categories.forEach(category => { %>
-    <li><%= category.name %></li>
-  <% }) %>
-</ul>
+  <ul class="category-list">
+    <% categories.forEach(category => { %>
+      <li>
+        <a href="/categories/<%= category.id %>" class="category-link">
+          <%= category.name %>
+        </a>
+      </li>
+    <% }) %>
+  </ul>
+
+</section>
 
 <%- include("partials/footer") %>

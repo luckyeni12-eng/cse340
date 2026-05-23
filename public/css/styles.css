@@ -62,17 +62,24 @@ main {
   color: #003366;
 }
 
+/* ===== CARD GRID ===== */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
+/* ===== BASE CARD ===== */
 .card {
   background-color: white;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
 }
 
 .card img {
@@ -84,6 +91,27 @@ main {
 .card h3,
 .card p {
   padding: 1rem;
+}
+
+/* ===== ORGANIZATION LOGO SUPPORT ===== */
+.org-logo {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Optional enhanced organization card */
+.organization-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.organization-card:hover {
+  transform: translateY(-5px);
 }
 
 .project-list,
@@ -112,4 +140,67 @@ footer {
   .hero {
     padding: 2rem 1rem;
   }
+}
+/* PAGE SECTION */
+.projects-section {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* PAGE TITLE */
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #0b3b6e;
+  text-align: center;
+}
+
+/* GRID LAYOUT */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+}
+
+/* CARD */
+.project-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: black;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+  transition: transform 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* HOVER EFFECT */
+.project-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+}
+
+/* IMAGE */
+.project-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+/* TEXT CONTENT */
+.project-content {
+  padding: 20px;
+}
+
+.project-content h3 {
+  margin-bottom: 10px;
+  color: #0b3b6e;
+}
+
+.project-content p {
+  line-height: 1.5;
+  color: #444;
 }

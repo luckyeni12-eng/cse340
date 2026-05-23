@@ -1,14 +1,43 @@
-import db from './db.js'
+import db from "./db.js";
 
-const getAllOrganizations = async () => {
-    const query = `
-        SELECT organization_id, name, description, contact_email, logo_filename
-        FROM public.organizations;
-    `;
+/**
+ * Get all organizations
+ */
+export const getAllOrganizations = async () => {
+  const query = `
+    SELECT id, name, description, contact_email, logo_filename
+    FROM organizations;
+  `;
 
-    const result = await db.query(query);
+  const result = await db.query(query);
+  return result.rows;
+};
 
-    return result.rows;
-}
+/**
+ * Get organization by ID
+ */
+export const getOrganizationById = async (id) => {
+  const query = `
+    SELECT id, name, description, contact_email, logo_filename
+    FROM organizations
+    WHERE id = $1;
+  `;
 
-export { getAllOrganizations }
+  const result = await db.query(query, [id]);
+  return result.rows[0];
+};
+
+/**
+ * Get projects for organization (FIXED)
+ */
+export const getProjectsByOrganizationId = async (organizationId) => {
+  const query = `
+    SELECT id, name, description, organization_id
+    FROM projects
+    WHERE organization_id = $1
+    ORDER BY id;
+  `;
+
+  const result = await db.query(query, [organizationId]);
+  return result.rows;
+};
