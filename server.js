@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 });
 
 /* =========================
-   REQUEST LOGGER
+   REQUEST LOGGERs
 ========================= */
 app.use((req, res, next) => {
   console.log(`Incoming request: ${req.method} ${req.url}`);
