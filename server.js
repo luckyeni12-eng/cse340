@@ -12,6 +12,10 @@ import { testConnection } from "./src/models/db.js";
 dotenv.config();
 
 const app = express();
+
+/* =========================
+   PATH SETUP
+========================= */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -20,7 +24,22 @@ const port = process.env.PORT || 5500;
 /* =========================
    MIDDLEWARE
 ========================= */
+
+/**
+ * ✅ FIX 1: Serve ALL static assets from /public
+ * This is what Render will use in production
+ */
 app.use(express.static(path.join(__dirname, "public")));
+
+/**
+ * ✅ FIX 2 (IMPORTANT SAFETY NET):
+ * Explicit image route in case DB or frontend calls /images/*
+ */
+app.use(
+  "/images",
+  express.static(path.join(__dirname, "public/images"))
+);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -31,7 +50,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 /* =========================
-   GLOBAL LOCALS (FIX FOOTER ONCE)
+   GLOBAL LOCALS
 ========================= */
 app.use((req, res, next) => {
   res.locals.currentYear = new Date().getFullYear();
@@ -39,7 +58,7 @@ app.use((req, res, next) => {
 });
 
 /* =========================
-   REQUEST LOGGERs
+   REQUEST LOGGER
 ========================= */
 app.use((req, res, next) => {
   console.log(`Incoming request: ${req.method} ${req.url}`);
@@ -63,7 +82,14 @@ app.get("/", (req, res) => {
 });
 
 /* =========================
-   404
+   HEALTH CHECK (Render useful)
+========================= */
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
+/* =========================
+   404 HANDLER
 ========================= */
 app.use((req, res) => {
   res.status(404).send(`Cannot GET ${req.originalUrl}`);
