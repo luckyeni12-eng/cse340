@@ -3,84 +3,41 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-/**
- * PostgreSQL connection pool
- */
+/* =========================
+   SAFELY DETECT ENV
+========================= */
+const isProduction = process.env.NODE_ENV === "production";
+
+/* =========================
+   POSTGRES POOL
+========================= */
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 
-  // Only use SSL in production (Render)
-  ssl:
-    process.env.NODE_ENV === "production"
-      ? { rejectUnauthorized: false }
-      : false,
+  ssl: isProduction
+    ? { rejectUnauthorized: false } // Render
+    : false, // Localhost
 });
 
-/**
- * Query wrapper with optional logging
- */
-let db = null;
+/* =========================
+   DB WRAPPER
+========================= */
+const db = {
+  query: (text, params) => pool.query(text, params),
+};
 
-if (
-  process.env.NODE_ENV === "development" &&
-  process.env.ENABLE_SQL_LOGGING === "true"
-) {
-  db = {
-    async query(text, params) {
-      try {
-        const start = Date.now();
-        const res = await pool.query(text, params);
-        const duration = Date.now() - start;
-
-        console.log("Executed query:", {
-          text: text.replace(/\s+/g, " ").trim(),
-          duration: `${duration}ms`,
-          rows: res.rowCount,
-        });
-
-        return res;
-      } catch (error) {
-        console.error("Error in query:", {
-          text: text.replace(/\s+/g, " ").trim(),
-          error: error.message,
-        });
-
-        throw error;
-      }
-    },
-
-    async close() {
-      await pool.end();
-    },
-  };
-} else {
-  db = pool;
-}
-
-/**
- * Test database connection
- */
+/* =========================
+   TEST CONNECTION
+========================= */
 const testConnection = async () => {
   try {
-    const result = await db.query(
-      "SELECT NOW() AS current_time"
-    );
-
-    console.log(
-      "Database connection successful:",
-      result.rows[0].current_time
-    );
-
-    return true;
+    const result = await db.query("SELECT NOW()");
+    console.log("Database connection successful:", result.rows[0].now);
   } catch (error) {
-    console.error(
-      "Database connection failed:",
-      error.message
-    );
-
+    console.error("Database connection failed:", error.message);
     throw error;
   }
 };
 
-export { testConnection };
 export default db;
+export { testConnection };
