@@ -8,13 +8,19 @@ export const categoriesPage = async (req, res) => {
   try {
     const categories = await getAllCategories();
 
+    console.log("Categories loaded:", categories);
+
     res.render("categories", {
       title: "Categories",
       currentYear: new Date().getFullYear(),
       categories,
     });
   } catch (err) {
-    res.status(500).send("Error loading categories");
+    console.error("CATEGORIES ERROR:", err);
+
+    res
+      .status(500)
+      .send(`Error loading categories: ${err.message}`);
   }
 };
 
@@ -23,7 +29,9 @@ export const categoryDetailsPage = async (req, res) => {
     const category = await getCategoryById(req.params.id);
     const projects = await getProjectsByCategoryId(req.params.id);
 
-    if (!category) return res.status(404).send("Category not found");
+    if (!category) {
+      return res.status(404).send("Category not found");
+    }
 
     res.render("category-details", {
       title: category.name,
@@ -32,6 +40,10 @@ export const categoryDetailsPage = async (req, res) => {
       projects,
     });
   } catch (err) {
-    res.status(500).send("Error loading category");
+    console.error("CATEGORY DETAILS ERROR:", err);
+
+    res
+      .status(500)
+      .send(`Error loading category: ${err.message}`);
   }
 };
