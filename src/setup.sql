@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS organizations (
 );
 
 -- =========================================
--- PROJECTS TABLE
+-- PROJECTS TABLEs
 -- =========================================
 CREATE TABLE IF NOT EXISTS projects (
     id SERIAL PRIMARY KEY,
