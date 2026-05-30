@@ -1,0 +1,43 @@
+<%- include("partials/header") %>
+
+<h2>Edit Category</h2>
+
+<% if (error) { %>
+  <p style="color:red;"><%= error %></p>
+<% } %>
+
+<form method="POST" action="/categories/edit-category/<%= category.id %>">
+
+  <input
+    type="text"
+    name="name"
+    value="<%= category.name %>"
+    required
+    maxlength="100"
+  >
+
+  <textarea name="description"><%= category.description %></textarea>
+
+  <!-- NEW: IMAGE FIELD -->
+  <input
+    type="text"
+    name="image"
+    value="<%= category.image || '' %>"
+    placeholder="/images/example.jpg"
+  >
+
+  <button type="submit">Update</button>
+</form>
+
+<script>
+document.querySelector("form").addEventListener("submit", function (e) {
+  const name = document.querySelector("[name='name']").value;
+
+  if (!name || name.length > 100) {
+    e.preventDefault();
+    alert("Name is required and must be under 100 characters");
+  }
+});
+</script>
+
+<%- include("partials/footer") %>
