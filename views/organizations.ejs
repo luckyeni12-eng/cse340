@@ -4,6 +4,11 @@
 
   <h2>Organizations</h2>
 
+  <!-- CREATE BUTTON (ADDED HERE AT TOP) -->
+  <a href="/organizations/new" class="btn btn-primary mb-3">
+    + Create Organization
+  </a>
+
   <% if (organizations && organizations.length > 0) { %>
 
     <ul class="organization-list">
@@ -13,6 +18,23 @@
           <a href="/organizations/<%= org.id %>">
             <%= org.name %>
           </a>
+
+          |
+
+          <!-- EDIT BUTTON -->
+          <a href="/organizations/edit/<%= org.id %>" class="btn btn-warning btn-sm">
+            Edit
+          </a>
+
+          |
+
+          <!-- DELETE BUTTON -->
+          <form method="POST" action="/organizations/delete/<%= org.id %>" style="display:inline;">
+            <button class="btn btn-danger btn-sm">
+              Delete
+            </button>
+          </form>
+
         </li>
       <% }) %>
 

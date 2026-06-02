@@ -1,26 +1,34 @@
 <%- include("partials/header") %>
 
 <section class="project-details-page">
+  <h2><%= project.name %></h2>
 
-  <h2><%= project.title %></h2>
+  <!-- IMAGE DISPLAY -->
+  <% if (project.image_path) { %>
+    <img
+      src="/images/<%= project.image_path %>"
+      alt="<%= project.name %>"
+      style="max-width: 400px; height: auto; margin-bottom: 15px;"
+    >
+  <% } %>
 
   <div class="project-details-card">
-
-    <img
-      src="<%= project.image %>"
-      alt="<%= project.title %>"
-      class="details-image"
-    >
-
     <div class="details-info">
-
-      <p>
-        <%= project.description %>
-      </p>
-
+      <p><%= project.description %></p>
     </div>
-
   </div>
+
+  <!-- CATEGORY DISPLAY -->
+  <h3>Categories</h3>
+  <% if (categories && categories.length > 0) { %>
+    <ul>
+      <% categories.forEach(c => { %>
+        <li><%= c.name %></li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>No categories assigned</p>
+  <% } %>
 
 </section>
 

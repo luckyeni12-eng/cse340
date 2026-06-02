@@ -1,0 +1,27 @@
+<%- include("partials/header") %>
+
+<h2><%= project.name %> - Categories</h2>
+
+<h3>Assign Category</h3>
+<form method="POST" action="/projects/<%= project.id %>/categories">
+  <select name="category_id">
+    <% categories.forEach(c => { %>
+      <option value="<%= c.id %>"><%= c.name %></option>
+    <% }) %>
+  </select>
+  <button type="submit">Assign</button>
+</form>
+
+<h3>Assigned Categories</h3>
+<ul>
+  <% assigned.forEach(a => { %>
+    <li>
+      <%= a.name %>
+      <form method="POST" action="/projects/<%= project.id %>/categories/delete/<%= a.id %>" style="display:inline;">
+        <button>Remove</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
+
+<%- include("partials/footer") %>

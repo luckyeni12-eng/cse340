@@ -1,0 +1,22 @@
+<%- include("partials/header") %>
+
+<h2>Edit Project</h2>
+
+<form method="POST" action="/projects/edit/<%= project.id %>">
+  <input type="text" name="name" value="<%= project.name %>" required />
+
+  <textarea name="description"><%= project.description %></textarea>
+
+  <select name="organization_id">
+    <% orgs.forEach(org => { %>
+      <option value="<%= org.id %>" 
+        <%= org.id === project.organization_id ? "selected" : "" %>>
+        <%= org.name %>
+      </option>
+    <% }) %>
+  </select>
+
+  <button type="submit">Update Project</button>
+</form>
+
+<%- include("partials/footer") %>

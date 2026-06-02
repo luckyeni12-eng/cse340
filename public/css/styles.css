@@ -141,6 +141,7 @@ footer {
     padding: 2rem 1rem;
   }
 }
+
 /* PAGE SECTION */
 .projects-section {
   max-width: 1200px;
@@ -203,4 +204,23 @@ footer {
 .project-content p {
   line-height: 1.5;
   color: #444;
+}
+
+/* ===============================
+   ✅ ADDED BUTTON STYLE (FIX)
+   =============================== */
+
+.btn-primary {
+  background-color: #1e3a8a; /* navy blue */
+  border-color: #1e3a8a;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background-color: #163172;
+  border-color: #163172;
 }

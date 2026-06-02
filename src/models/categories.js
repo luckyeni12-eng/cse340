@@ -30,9 +30,7 @@ export async function getProjectsByCategoryId(id) {
   return result.rows;
 }
 
-/* =========================
-   🆕 WEEK 4: CREATE CATEGORY
-========================= */
+// CREATE
 export async function createCategory(name, description = null, image = null) {
   const result = await db.query(
     `INSERT INTO categories (name, description, image)
@@ -43,18 +41,19 @@ export async function createCategory(name, description = null, image = null) {
   return result.rows[0];
 }
 
-/* =========================
-   🆕 WEEK 4: UPDATE CATEGORY
-========================= */
+// UPDATE
 export async function updateCategory(id, name, description = null, image = null) {
   const result = await db.query(
     `UPDATE categories
-     SET name = $1,
-         description = $2,
-         image = $3
-     WHERE id = $4
+     SET name=$1, description=$2, image=$3
+     WHERE id=$4
      RETURNING *`,
     [name, description, image, id]
   );
   return result.rows[0];
+}
+
+// ❌ NEW: DELETE CATEGORY
+export async function deleteCategory(id) {
+  await db.query("DELETE FROM categories WHERE id = $1", [id]);
 }

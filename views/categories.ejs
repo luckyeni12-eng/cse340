@@ -1,10 +1,12 @@
+<!-- categories.ejs -->
+
 <%- include("partials/header") %>
 
-<section class="categories-section page-container">
-  <h2 class="page-title">Categories</h2>
+<section class="categories-container">
 
-  <!--  CREATE BUTTON -->
-  <a href="/categories/new-category">Create New Category</a>
+  <a href="/categories/new-category" class="btn btn-primary mb-3">
+    + Create Category
+  </a>
 
   <ul class="category-list">
     <% categories.forEach(category => { %>
@@ -14,10 +16,19 @@
         </a>
 
         |
+
         <a href="/categories/edit-category/<%= category.id %>">Edit</a>
+
+        |
+
+        <!-- DELETE BUTTON -->
+        <form method="POST" action="/categories/delete/<%= category.id %>" style="display:inline;">
+          <button class="btn btn-danger btn-sm">Delete</button>
+        </form>
       </li>
     <% }) %>
   </ul>
+
 </section>
 
 <%- include("partials/footer") %>

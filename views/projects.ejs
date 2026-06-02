@@ -1,37 +1,28 @@
 <%- include("partials/header") %>
 
 <section class="projects-page">
-
   <h2>Service Projects</h2>
 
+  <!-- CREATE BUTTON -->
+  <a href="/projects/new">+ Create Project</a>
+
   <ul class="project-links">
+    <% projects.forEach(p => { %>
+      <li>
+        <a href="/projects/<%= p.id %>"><%= p.name %></a>
 
-    <li>
-      <a href="/projects/1">
-        Park Cleanup Day
-      </a>
-    </li>
+        | <a href="/projects/edit/<%= p.id %>">Edit</a>
 
-    <li>
-      <a href="/projects/2">
-        After-School Tutoring
-      </a>
-    </li>
+        <!-- CATEGORY ASSIGNMENT LINK -->
+        | <a href="/projects/<%= p.id %>/categories">Categories</a>
 
-    <li>
-      <a href="/projects/3">
-        Food Bank Assistance
-      </a>
-    </li>
-
-    <li>
-      <a href="/projects/4">
-        Community Health Fair
-      </a>
-    </li>
-
+        <!-- DELETE -->
+        <form method="POST" action="/projects/delete/<%= p.id %>" style="display:inline;">
+          <button>Delete</button>
+        </form>
+      </li>
+    <% }) %>
   </ul>
-
 </section>
 
 <%- include("partials/footer") %>

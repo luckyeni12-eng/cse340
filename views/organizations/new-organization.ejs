@@ -1,0 +1,12 @@
+<%- include("../partials/header") %>
+
+<h2>Create Organization</h2>
+
+<form method="POST" action="/organizations/new">
+  <input name="name" placeholder="Name" required />
+  <textarea name="description"></textarea>
+  <input name="contact_email" placeholder="Email" />
+  <button>Create</button>
+</form>
+
+<%- include("../partials/footer") %>
