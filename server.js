@@ -13,7 +13,6 @@ import authRoutes from "./src/routes/authRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js";
 
 import { requireLogin } from "./src/middleware/authMiddleware.js";
-
 import { testConnection } from "./src/models/db.js";
 
 dotenv.config();
@@ -25,12 +24,15 @@ const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 5500;
 
-/* ========================= DEBUG: CONFIRM FILE LOADEDs ========================= */
+/* ========================= DEBUG ========================= */
 console.log("🔥 SERVER.JS LOADED SUCCESSFULLY");
 
 /* ========================= VIEW ENGINE ========================= */
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+/* ========================= TRUST PROXY (RENDER FIX) ========================= */
+app.set("trust proxy", 1);
 
 /* ========================= STATIC FILES ========================= */
 app.use(express.static(path.join(__dirname, "public")));
@@ -46,9 +48,11 @@ app.use(
     secret: process.env.SESSION_SECRET || "week4-secret",
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     cookie: {
       secure: false,
       httpOnly: true,
+      maxAge: 1000 * 60 * 60,
     },
   })
 );
@@ -63,13 +67,13 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
 
-  /* DEBUG SESSION */
   console.log("🧠 SESSION USER:", req.session?.user);
+  console.log("🧠 SESSION ROLE:", req.session?.user?.role);
 
   next();
 });
 
-/* ========================= REQUEST LOGGER (IMPORTANT DEBUG TOOL) ========================= */
+/* ========================= REQUEST LOGGER ========================= */
 app.use((req, res, next) => {
   console.log("➡️ REQUEST:", req.method, req.url);
   next();
@@ -88,19 +92,14 @@ app.use("/organizations", organizationRoutes);
 
 /* ========================= HOME ========================= */
 app.get("/", (req, res) => {
-  res.render("index", {
-    title: "Home",
-  });
+  res.render("index", { title: "Home" });
 });
 
-/* ========================= DASHBOARD DEBUG ROUTE ========================= */
+/* ========================= DASHBOARD ========================= */
 app.get("/dashboard", requireLogin, (req, res) => {
   console.log("🎯 DASHBOARD ROUTE HIT");
 
-  console.log("👤 USER IN DASHBOARD:", req.session?.user);
-
   if (!req.session?.user) {
-    console.log("❌ NO USER FOUND IN SESSION → REDIRECTING");
     return res.redirect("/login");
   }
 
@@ -115,7 +114,7 @@ app.get("/health", (req, res) => {
   res.send("OK");
 });
 
-/* ========================= 404 HANDLER (DEBUG VERSION) ========================= */
+/* ========================= 404 ========================= */
 app.use((req, res) => {
   console.log("❌ 404 HIT:", req.method, req.url);
 
@@ -134,7 +133,6 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).send(`
     <h1 style="color:red;">Server Error</h1>
     <p><strong>${err.message}</strong></p>
-    <pre>${err.stack}</pre>
   `);
 });
 
