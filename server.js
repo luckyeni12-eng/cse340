@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 5500;
 
-/* ========================= DEBUG: CONFIRM FILE LOADED ========================= */
+/* ========================= DEBUG: CONFIRM FILE LOADEDs ========================= */
 console.log("🔥 SERVER.JS LOADED SUCCESSFULLY");
 
 /* ========================= VIEW ENGINE ========================= */
