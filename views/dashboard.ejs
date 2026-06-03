@@ -1,0 +1,69 @@
+<%- include("partials/header") %>
+
+<section class="dashboard">
+
+  <h2>Dashboard</h2>
+
+  <p>
+    Welcome,
+    <strong><%= user ? user.name : "User" %></strong>
+  </p>
+
+  <p>
+    Role:
+    <strong><%= user ? user.role : "Guest" %></strong>
+  </p>
+
+  <hr>
+
+  <div class="dashboard-links">
+
+    <h3>Available Actions</h3>
+
+    <ul>
+
+      <li>
+        <a href="/organizations">Organizations</a>
+      </li>
+
+      <li>
+        <a href="/projects">Projects</a>
+      </li>
+
+      <li>
+        <a href="/categories">Categories</a>
+      </li>
+
+      <% if (user && user.role === "admin") { %>
+
+        <li>
+          <a href="/users">Manage Users</a>
+        </li>
+
+        <li>
+          <a href="/organizations/new">Create Organization</a>
+        </li>
+
+        <li>
+          <a href="/projects/new">Create Project</a>
+        </li>
+
+        <li>
+          <a href="/categories/new-category">Create Category</a>
+        </li>
+
+      <% } %>
+
+    </ul>
+
+  </div>
+
+  <hr>
+
+  <a href="/logout" class="btn-primary">
+    Logout
+  </a>
+
+</section>
+
+<%- include("partials/footer") %>
