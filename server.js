@@ -127,12 +127,14 @@ app.use((req, res) => {
 /* ========================= ERROR HANDLER ========================= */
 app.use((err, req, res, next) => {
   console.log("🔥 SERVER ERROR CAUGHT");
-  console.error(err.message);
-  console.error(err.stack);
 
-  res.status(err.status || 500).send(`
+  console.error("Message:", err?.message);
+  console.error("Stack:", err?.stack);
+
+  res.status(err?.status || 500).send(`
     <h1 style="color:red;">Server Error</h1>
-    <p><strong>${err.message}</strong></p>
+    <p><strong>${err?.message || "Unknown error"}</strong></p>
+    <pre>${err?.stack || ""}</pre>
   `);
 });
 

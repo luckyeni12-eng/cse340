@@ -22,7 +22,9 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+  // ✅ FIX: move log AFTER user is declared
   const user = await getUserByEmail(email);
+  console.log("USER FROM DB:", user);
 
   if (!user) {
     req.flash("error", "Invalid credentials");
