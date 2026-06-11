@@ -10,6 +10,7 @@ import {
 } from "../models/projects.js";
 
 import db from "../models/db.js";
+import { isVolunteer } from "../models/volunteers.js";
 
 /* ========================= LIST ========================= */
 export const getProjectsPage = async (req, res) => {
@@ -24,10 +25,28 @@ export const getProjectDetails = async (req, res) => {
 
   if (!project) return res.status(404).send("Project not found");
 
+  // FIX: safely get user from session
+  const user = req.session.user || null;
+
+  // FIX: default value so EJS NEVER crashes
+  let isUserVolunteer = false;
+
+  // FIX: only check DB if user exists
+  if (user) {
+    try {
+      isUserVolunteer = await isVolunteer(user.id, req.params.id);
+    } catch (err) {
+      console.error("Volunteer check failed:", err.message);
+      isUserVolunteer = false;
+    }
+  }
+
   res.render("project-details", {
     title: project.name,
     project,
     categories,
+    user,
+    isUserVolunteer, 
   });
 };
 

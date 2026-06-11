@@ -8,12 +8,16 @@ import flash from "connect-flash";
 import categoryRoutes from "./src/routes/categoryRoutes.js";
 import projectRoutes from "./src/routes/projectRoutes.js";
 import organizationRoutes from "./src/routes/organizationRoutes.js";
+import volunteerRoutes from "./src/routes/volunteerRoutes.js";
 
 import authRoutes from "./src/routes/authRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js";
 
 import { requireLogin } from "./src/middleware/authMiddleware.js";
 import { testConnection } from "./src/models/db.js";
+
+// dashboard controller
+import { getDashboard } from "./src/controllers/dashboardController.js";
 
 dotenv.config();
 
@@ -24,21 +28,14 @@ const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 5500;
 
-/* ========================= DEBUG ========================= */
-console.log("🔥 SERVER.JS LOADED SUCCESSFULLY");
-
 /* ========================= VIEW ENGINE ========================= */
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-/* ========================= TRUST PROXY (RENDER FIX) ========================= */
-app.set("trust proxy", 1);
-
-/* ========================= STATIC FILES ========================= */
+/* ========================= STATIC FILES (🔥 FIX FOR CSS/NAVY BLUE) ========================= */
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/images", express.static(path.join(__dirname, "public/images")));
 
-/* ========================= BODY PARSER ========================= */
+/* ========================= CORE MIDDLEWARE ========================= */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -48,12 +45,7 @@ app.use(
     secret: process.env.SESSION_SECRET || "week4-secret",
     resave: false,
     saveUninitialized: false,
-    proxy: true,
-    cookie: {
-      secure: false,
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60,
-    },
+    cookie: { secure: false },
   })
 );
 
@@ -62,33 +54,24 @@ app.use(flash());
 
 /* ========================= GLOBAL LOCALS ========================= */
 app.use((req, res, next) => {
-  res.locals.user = req.session?.user || null;
-  res.locals.currentYear = new Date().getFullYear();
+  res.locals.user = req.session.user || null;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
 
-  console.log("🧠 SESSION USER:", req.session?.user);
-  console.log("🧠 SESSION ROLE:", req.session?.user?.role);
+  // footer year (safe everywhere)
+  res.locals.currentYear = new Date().getFullYear();
 
   next();
 });
 
-/* ========================= REQUEST LOGGER ========================= */
-app.use((req, res, next) => {
-  console.log("➡️ REQUEST:", req.method, req.url);
-  next();
-});
-
-/* ========================= AUTH ROUTES ========================= */
+/* ========================= ROUTES ========================= */
 app.use("/", authRoutes);
-
-/* ========================= PROTECTED USER ROUTES ========================= */
 app.use("/users", requireLogin, userRoutes);
 
-/* ========================= MAIN ROUTES ========================= */
 app.use("/categories", categoryRoutes);
 app.use("/projects", projectRoutes);
 app.use("/organizations", organizationRoutes);
+app.use("/projects", volunteerRoutes);
 
 /* ========================= HOME ========================= */
 app.get("/", (req, res) => {
@@ -96,49 +79,9 @@ app.get("/", (req, res) => {
 });
 
 /* ========================= DASHBOARD ========================= */
-app.get("/dashboard", requireLogin, (req, res) => {
-  console.log("🎯 DASHBOARD ROUTE HIT");
+app.get("/dashboard", requireLogin, getDashboard);
 
-  if (!req.session?.user) {
-    return res.redirect("/login");
-  }
-
-  res.render("dashboard", {
-    title: "Dashboard",
-    user: req.session.user
-  });
-});
-
-/* ========================= HEALTH CHECK ========================= */
-app.get("/health", (req, res) => {
-  res.send("OK");
-});
-
-/* ========================= 404 ========================= */
-app.use((req, res) => {
-  console.log("❌ 404 HIT:", req.method, req.url);
-
-  res.status(404).send(`
-    <h1 style="color:red;">404 ERROR</h1>
-    <p>Route not found: <strong>${req.originalUrl}</strong></p>
-  `);
-});
-
-/* ========================= ERROR HANDLER ========================= */
-app.use((err, req, res, next) => {
-  console.log("🔥 SERVER ERROR CAUGHT");
-
-  console.error("Message:", err?.message);
-  console.error("Stack:", err?.stack);
-
-  res.status(err?.status || 500).send(`
-    <h1 style="color:red;">Server Error</h1>
-    <p><strong>${err?.message || "Unknown error"}</strong></p>
-    <pre>${err?.stack || ""}</pre>
-  `);
-});
-
-/* ========================= START SERVER ========================= */
+/* ========================= SERVER START ========================= */
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   await testConnection();

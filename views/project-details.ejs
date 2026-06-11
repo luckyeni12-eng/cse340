@@ -33,3 +33,19 @@
 </section>
 
 <%- include("partials/footer") %>
+
+<% if (user) { %>
+
+  <% if (!isUserVolunteer) { %>
+    <form method="POST" action="/projects/<%= project.id %>/volunteer">
+      <button type="submit">Volunteer for this project</button>
+    </form>
+  <% } else { %>
+    <p>You are volunteering for this project</p>
+
+    <form method="POST" action="/projects/<%= project.id %>/unvolunteer">
+      <button type="submit">Remove Volunteer</button>
+    </form>
+  <% } %>
+
+<% } %>

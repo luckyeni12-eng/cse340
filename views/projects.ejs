@@ -16,9 +16,14 @@
         <!-- CATEGORY ASSIGNMENT LINK -->
         | <a href="/projects/<%= p.id %>/categories">Categories</a>
 
+        <!-- JOIN PROJECT BUTTON -->
+        | <form action="/projects/<%= p.id %>/join" method="POST" style="display:inline;">
+            <button type="submit">Join Project</button>
+          </form>
+
         <!-- DELETE -->
         <form method="POST" action="/projects/delete/<%= p.id %>" style="display:inline;">
-          <button>Delete</button>
+          <button type="submit">Delete</button>
         </form>
       </li>
     <% }) %>

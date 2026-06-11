@@ -21,49 +21,64 @@
     <h3>Available Actions</h3>
 
     <ul>
-
-      <li>
-        <a href="/organizations">Organizations</a>
-      </li>
-
-      <li>
-        <a href="/projects">Projects</a>
-      </li>
-
-      <li>
-        <a href="/categories">Categories</a>
-      </li>
+      <li><a href="/organizations">Organizations</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/categories">Categories</a></li>
 
       <% if (user && user.role === "admin") { %>
-
-        <li>
-          <a href="/users">Manage Users</a>
-        </li>
-
-        <li>
-          <a href="/organizations/new">Create Organization</a>
-        </li>
-
-        <li>
-          <a href="/projects/new">Create Project</a>
-        </li>
-
-        <li>
-          <a href="/categories/new-category">Create Category</a>
-        </li>
-
+        <li><a href="/users">Manage Users</a></li>
+        <li><a href="/organizations/new">Create Organization</a></li>
+        <li><a href="/projects/new">Create Project</a></li>
+        <li><a href="/categories/new-category">Create Category</a></li>
       <% } %>
-
     </ul>
 
   </div>
 
   <hr>
 
-  <a href="/logout" class="btn-primary">
-    Logout
-  </a>
+  <a href="/logout" class="btn-primary">Logout</a>
 
 </section>
+
+<hr>
+
+<!-- SAFE VOLUNTEER SECTION -->
+<h2>My Volunteer Projects</h2>
+
+<% if (typeof volunteerProjects !== "undefined" && volunteerProjects && volunteerProjects.length > 0) { %>
+  <ul>
+    <% volunteerProjects.forEach(project => { %>
+      <li>
+        <strong><%= project.title %></strong>
+
+        <form method="POST" action="/projects/<%= project.id %>/unvolunteer">
+          <button type="submit">Remove</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
+<% } else { %>
+  <p>You are not volunteering for any projects yet.</p>
+<% } %>
+
+<hr>
+
+<!--  SAFE PROJECTS SECTION -->
+<h2>All Projects</h2>
+
+<% if (typeof projects !== "undefined" && projects && projects.length > 0) { %>
+  <ul>
+    <% projects.forEach(project => { %>
+      <li>
+        <h3><%= project.title %></h3>
+        <p><%= project.description %></p>
+        <p><%= project.location %></p>
+      </li>
+    <% }) %>
+  </ul>
+<% } else { %>
+  <p>No projects available.</p>
+<% } %>
 
 <%- include("partials/footer") %>

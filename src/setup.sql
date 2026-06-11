@@ -82,3 +82,12 @@ VALUES
 (2, 1),
 (3, 4),
 (3, 2);
+
+-- =========================================
+-- VOLUNTEERS (W06 MANY-TO-MANY)
+-- =========================================
+CREATE TABLE IF NOT EXISTS volunteers (
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    project_id INT REFERENCES projects(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, project_id)
+);
