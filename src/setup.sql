@@ -3,7 +3,7 @@
 -- =========================================
 
 -- =========================================
--- ORGANIZATIONS TABLE
+-- ORGANIZATIONS TABLEs
 -- =========================================
 CREATE TABLE IF NOT EXISTS organizations (
     id SERIAL PRIMARY KEY,
