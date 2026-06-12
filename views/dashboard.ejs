@@ -18,26 +18,28 @@
 
   <div class="dashboard-links">
 
-    <h3>Available Actions</h3>
+```
+<h3>Available Actions</h3>
 
-    <ul>
-      <li><a href="/organizations">Organizations</a></li>
-      <li><a href="/projects">Projects</a></li>
-      <li><a href="/categories">Categories</a></li>
+<ul>
+  <li><a href="/organizations">Organizations</a></li>
+  <li><a href="/projects">Projects</a></li>
+  <li><a href="/categories">Categories</a></li>
 
-      <% if (user && user.role === "admin") { %>
-        <li><a href="/users">Manage Users</a></li>
-        <li><a href="/organizations/new">Create Organization</a></li>
-        <li><a href="/projects/new">Create Project</a></li>
-        <li><a href="/categories/new-category">Create Category</a></li>
-      <% } %>
-    </ul>
+  <% if (user && user.role === "admin") { %>
+    <li><a href="/users">Manage Users</a></li>
+    <li><a href="/organizations/new">Create Organization</a></li>
+    <li><a href="/projects/new">Create Project</a></li>
+    <li><a href="/categories/new-category">Create Category</a></li>
+  <% } %>
+</ul>
+```
 
   </div>
 
   <hr>
 
-  <a href="/logout" class="btn-primary">Logout</a>
+<a href="/logout" class="btn-primary">Logout</a>
 
 </section>
 
@@ -45,7 +47,8 @@
 
 <h2>My Volunteer Projects</h2>
 
-<% if (typeof volunteerProjects !== "undefined" && volunteerProjects && volunteerProjects.length > 0) { %>
+<% if (volunteerProjects && volunteerProjects.length > 0) { %>
+
   <ul>
     <% volunteerProjects.forEach(project => { %>
       <% if (project.title) { %>
@@ -56,19 +59,29 @@
             </a>
           </strong>
 
-          <% if (project.location) { %>
-            <span>(<%= project.location %>)</span>
-          <% } %>
-
-          <form method="POST" action="/projects/<%= project.id %>/unvolunteer"
-                style="display: inline; margin-left: 10px;">
-            <button type="submit" class="btn-danger" style="cursor: pointer;">
-              Remove
-            </button>
-          </form>
-        </li>
+```
+      <% if (project.location) { %>
+        <span>(<%= project.location %>)</span>
       <% } %>
-    <% }) %>
+
+      <form
+        method="POST"
+        action="/projects/<%= project.id %>/unvolunteer"
+        style="display:inline; margin-left:10px;"
+      >
+        <button
+          type="submit"
+          class="btn-danger"
+          style="cursor:pointer;"
+        >
+          Remove
+        </button>
+      </form>
+    </li>
+  <% } %>
+<% }) %>
+```
+
   </ul>
 <% } else { %>
   <p>You are not volunteering for any projects yet.</p>
@@ -78,50 +91,47 @@
 
 <h2>All Projects</h2>
 
-<%
-  // Clean 8-project default list (fixed + corrected)
-  const defaultProjectNames = [
-    "Tree Planting",
-    "Coding Bootcamp",
-    "Health Awareness Campaign",
-    "Beach Cleanup",
-    "Community Health Fair",
-    "Food Bank",
-    "After School Tutoring",
-    "Park Cleanup"
-  ];
-%>
+<% if (projects && projects.length > 0) { %>
 
-<% if (typeof projects !== "undefined" && projects && projects.length > 0) { %>
   <ul>
-    <% projects.forEach((project, index) => { %>
-      <% if (project.title || project.location || project.description) { %>
-        <li style="margin-bottom: 12px;">
+    <% projects.forEach(project => { %>
 
-          <strong>
-            <a href="/projects/<%= project.id %>">
-              <%= project.title 
-                  ? project.title 
-                  : defaultProjectNames[index % defaultProjectNames.length] %>
-            </a>
-          </strong>
+```
+  <% if (project.title) { %>
 
-          <% if (project.location) { %>
-            — <span><%= project.location %></span>
-          <% } %>
+    <li style="margin-bottom: 12px;">
 
-          <% if (project.description) { %>
-            <small style="display: block; color: #666; margin-top: 2px;">
-              <%= project.description %>
-            </small>
-          <% } %>
+      <strong>
+        <a href="/projects/<%= project.id %>">
+          <%= project.title %>
+        </a>
+      </strong>
 
-        </li>
+      <% if (project.location) { %>
+        — <span><%= project.location %></span>
       <% } %>
-    <% }) %>
+
+      <% if (project.description) { %>
+        <small
+          style="display:block; color:#666; margin-top:2px;"
+        >
+          <%= project.description %>
+        </small>
+      <% } %>
+
+    </li>
+
+  <% } %>
+
+<% }) %>
+```
+
   </ul>
+
 <% } else { %>
+
   <p>No projects available.</p>
+
 <% } %>
 
 <%- include("partials/footer") %>
