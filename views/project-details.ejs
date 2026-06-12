@@ -3,23 +3,14 @@
 <section class="project-details-page">
   <h2><%= project.name %></h2>
 
-  <!-- IMAGE DISPLAY -->
   <% if (project.image_path) { %>
-    <img
-      src="/images/<%= project.image_path %>"
-      alt="<%= project.name %>"
-      style="max-width: 400px; height: auto; margin-bottom: 15px;"
-    >
+    <img src="/images/<%= project.image_path %>" alt="<%= project.name %>">
   <% } %>
 
-  <div class="project-details-card">
-    <div class="details-info">
-      <p><%= project.description %></p>
-    </div>
-  </div>
+  <p><%= project.description %></p>
 
-  <!-- CATEGORY DISPLAY -->
   <h3>Categories</h3>
+
   <% if (categories && categories.length > 0) { %>
     <ul>
       <% categories.forEach(c => { %>
@@ -30,22 +21,23 @@
     <p>No categories assigned</p>
   <% } %>
 
+  <!-- VOLUNTEER SECTION MUST BE HERE -->
+  <% if (user) { %>
+
+    <% if (!isUserVolunteer) { %>
+      <form method="POST" action="/projects/<%= project.id %>/volunteer">
+        <button type="submit">Volunteer for this project</button>
+      </form>
+    <% } else { %>
+      <p>You are volunteering for this project</p>
+
+      <form method="POST" action="/projects/<%= project.id %>/unvolunteer">
+        <button type="submit">Remove Volunteer</button>
+      </form>
+    <% } %>
+
+  <% } %>
+
 </section>
 
 <%- include("partials/footer") %>
-
-<% if (user) { %>
-
-  <% if (!isUserVolunteer) { %>
-    <form method="POST" action="/projects/<%= project.id %>/volunteer">
-      <button type="submit">Volunteer for this project</button>
-    </form>
-  <% } else { %>
-    <p>You are volunteering for this project</p>
-
-    <form method="POST" action="/projects/<%= project.id %>/unvolunteer">
-      <button type="submit">Remove Volunteer</button>
-    </form>
-  <% } %>
-
-<% } %>

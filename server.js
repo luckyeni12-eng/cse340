@@ -18,6 +18,7 @@ import { testConnection } from "./src/models/db.js";
 
 // dashboard controller
 import { getDashboard } from "./src/controllers/dashboardController.js";
+import dashboardRoutes from "./src/routes/dashboardRoutes.js";
 
 dotenv.config();
 
@@ -66,6 +67,7 @@ app.use((req, res, next) => {
 
 /* ========================= ROUTES ========================= */
 app.use("/", authRoutes);
+app.use("/", dashboardRoutes);
 app.use("/users", requireLogin, userRoutes);
 
 app.use("/categories", categoryRoutes);

@@ -43,19 +43,31 @@
 
 <hr>
 
-<!-- SAFE VOLUNTEER SECTION -->
 <h2>My Volunteer Projects</h2>
 
 <% if (typeof volunteerProjects !== "undefined" && volunteerProjects && volunteerProjects.length > 0) { %>
   <ul>
     <% volunteerProjects.forEach(project => { %>
-      <li>
-        <strong><%= project.title %></strong>
+      <% if (project.title) { %>
+        <li style="margin-bottom: 10px;">
+          <strong>
+            <a href="/projects/<%= project.id %>">
+              <%= project.title %>
+            </a>
+          </strong>
 
-        <form method="POST" action="/projects/<%= project.id %>/unvolunteer">
-          <button type="submit">Remove</button>
-        </form>
-      </li>
+          <% if (project.location) { %>
+            <span>(<%= project.location %>)</span>
+          <% } %>
+
+          <form method="POST" action="/projects/<%= project.id %>/unvolunteer"
+                style="display: inline; margin-left: 10px;">
+            <button type="submit" class="btn-danger" style="cursor: pointer;">
+              Remove
+            </button>
+          </form>
+        </li>
+      <% } %>
     <% }) %>
   </ul>
 <% } else { %>
@@ -64,17 +76,48 @@
 
 <hr>
 
-<!--  SAFE PROJECTS SECTION -->
 <h2>All Projects</h2>
+
+<%
+  // Clean 8-project default list (fixed + corrected)
+  const defaultProjectNames = [
+    "Tree Planting",
+    "Coding Bootcamp",
+    "Health Awareness Campaign",
+    "Beach Cleanup",
+    "Community Health Fair",
+    "Food Bank",
+    "After School Tutoring",
+    "Park Cleanup"
+  ];
+%>
 
 <% if (typeof projects !== "undefined" && projects && projects.length > 0) { %>
   <ul>
-    <% projects.forEach(project => { %>
-      <li>
-        <h3><%= project.title %></h3>
-        <p><%= project.description %></p>
-        <p><%= project.location %></p>
-      </li>
+    <% projects.forEach((project, index) => { %>
+      <% if (project.title || project.location || project.description) { %>
+        <li style="margin-bottom: 12px;">
+
+          <strong>
+            <a href="/projects/<%= project.id %>">
+              <%= project.title 
+                  ? project.title 
+                  : defaultProjectNames[index % defaultProjectNames.length] %>
+            </a>
+          </strong>
+
+          <% if (project.location) { %>
+            — <span><%= project.location %></span>
+          <% } %>
+
+          <% if (project.description) { %>
+            <small style="display: block; color: #666; margin-top: 2px;">
+              <%= project.description %>
+            </small>
+          <% } %>
+
+        </li>
+      <% } %>
     <% }) %>
   </ul>
 <% } else { %>
